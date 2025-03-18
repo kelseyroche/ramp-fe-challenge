@@ -39,9 +39,18 @@ export const getTransactionsPaginated = ({
   }
 }
 
+// export const getTransactionsByEmployee = ({ employeeId }: RequestByEmployeeParams) => {
+//   if (!employeeId) {
+//     throw new Error("Employee id cannot be empty")
+//   }
+
+//   return data.transactions.filter((transaction) => transaction.employee.id === employeeId)
+// }
+
 export const getTransactionsByEmployee = ({ employeeId }: RequestByEmployeeParams) => {
+  // If employeeId is not provided, return all transactions (handle "All Employees" case)
   if (!employeeId) {
-    throw new Error("Employee id cannot be empty")
+    return data.transactions
   }
 
   return data.transactions.filter((transaction) => transaction.employee.id === employeeId)

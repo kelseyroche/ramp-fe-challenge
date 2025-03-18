@@ -6,7 +6,7 @@ export function useWrappedRequest() {
   const { setError } = useContext(AppContext)
 
   const wrappedRequest = useCallback(
-    async <TData extends any = void>(promise: () => Promise<TData>): Promise<TData | null> => {
+    async <TData>(promise: () => Promise<TData>): Promise<TData | null> => {
       try {
         setLoading(true)
         const result = await promise()

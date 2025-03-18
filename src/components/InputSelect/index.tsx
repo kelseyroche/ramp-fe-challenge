@@ -18,14 +18,26 @@ export function InputSelect<TItem>({
     left: 0,
   })
 
+  // const onChange = useCallback<InputSelectOnChange<TItem>>(
+  //   (selectedItem) => {
+  //     if (selectedItem === null) {
+  //       return
+  //     }
+
+  //     consumerOnChange(selectedItem)
+  //     setSelectedValue(selectedItem)
+  //   },
+  //   [consumerOnChange]
+  // )
   const onChange = useCallback<InputSelectOnChange<TItem>>(
     (selectedItem) => {
-      if (selectedItem === null) {
-        return
+      if (selectedItem === null || parseItem(selectedItem).value === "all") {
+        consumerOnChange(null)
+        setSelectedValue(null)
+      } else {
+        consumerOnChange(selectedItem)
+        setSelectedValue(selectedItem)
       }
-
-      consumerOnChange(selectedItem)
-      setSelectedValue(selectedItem)
     },
     [consumerOnChange]
   )

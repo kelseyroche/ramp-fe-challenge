@@ -6,7 +6,7 @@ import { useEmployees } from "./hooks/useEmployees"
 import { usePaginatedTransactions } from "./hooks/usePaginatedTransactions"
 import { useTransactionsByEmployee } from "./hooks/useTransactionsByEmployee"
 import { EMPTY_EMPLOYEE } from "./utils/constants"
-import { Employee } from "./utils/types"
+import { Employee, Transaction } from "./utils/types"
 
 export function App() {
   const { data: employees, ...employeeUtils } = useEmployees()
@@ -22,12 +22,9 @@ export function App() {
   const loadAllTransactions = useCallback(async () => {
     setIsLoading(true)
     transactionsByEmployeeUtils.invalidateData()
-
-    await employeeUtils.fetchAll()
     await paginatedTransactionsUtils.fetchAll()
-
     setIsLoading(false)
-  }, [employeeUtils, paginatedTransactionsUtils, transactionsByEmployeeUtils])
+  }, [paginatedTransactionsUtils, transactionsByEmployeeUtils])
 
   const loadTransactionsByEmployee = useCallback(
     async (employeeId: string) => {
@@ -62,10 +59,10 @@ export function App() {
           })}
           onChange={async (newValue) => {
             if (newValue === null) {
-              return
+              await loadAllTransactions()
+            } else {
+              await loadTransactionsByEmployee(newValue.id)
             }
-
-            await loadTransactionsByEmployee(newValue.id)
           }}
         />
 
@@ -74,7 +71,7 @@ export function App() {
         <div className="RampGrid">
           <Transactions transactions={transactions} />
 
-          {transactions !== null && (
+          {paginatedTransactions?.nextPage !== null && transactionsByEmployee === null && (
             <button
               className="RampButton"
               disabled={paginatedTransactionsUtils.loading}
